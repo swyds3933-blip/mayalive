@@ -2,16 +2,392 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Maya Live</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة مايا لايف - Maya Live Platform</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .login-section {
+            text-align: center;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .app-content {
+            display: none;
+        }
+
+        .welcome-message {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-right: 4px solid #667eea;
+        }
+
+        .welcome-message h2 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .share-box {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .share-link-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .share-link-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95em;
+            font-family: monospace;
+            background: white;
+            cursor: text;
+            user-select: all;
+        }
+
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #764ba2;
+        }
+
+        .social-share {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .social-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.95em;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .whatsapp-btn {
+            background: #25D366;
+            color: white;
+        }
+
+        .twitter-btn {
+            background: #1DA1F2;
+            color: white;
+        }
+
+        .facebook-btn {
+            background: #1877F2;
+            color: white;
+        }
+
+        .email-btn {
+            background: #EA4335;
+            color: white;
+        }
+
+        .users-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .user-card {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        .user-card .status {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #4CAF50;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .logout-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #d32f2f;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-box .number {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-box .label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .share-link-container {
+                flex-direction: column;
+            }
+
+            .social-share {
+                flex-direction: column;
+            }
+
+            .social-btn {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>منصة مايا لايف</h1>
-    <button id="loginBtn" onclick="initApp()">دخول المنصة</button>
-    <div id="content" style="display:none;">
-        <p>أهلاً بك في المنصة</p>
+    <div class="container">
+        <div class="header">
+            <h1>منصة مايا لايف</h1>
+            <p>Maya Live Platform - منصة التواصل والمشاركة</p>
+        </div>
+
+        <div class="content">
+            <!-- قسم الدخول -->
+            <div id="loginSection" class="login-section">
+                <h2>أهلاً وسهلاً بك</h2>
+                <p style="color: #666; margin-top: 10px;">اضغط على الزر أدناه للدخول إلى المنصة</p>
+                <button class="login-btn" onclick="initApp()">دخول المنصة</button>
+            </div>
+
+            <!-- قسم التطبيق الرئيسي -->
+            <div id="appContent" class="app-content">
+                <!-- رسالة الترحيب -->
+                <div class="welcome-message">
+                    <h2>🎉 أهلاً بك في المنصة!</h2>
+                    <p>تم تسجيل دخولك بنجاح. يمكنك الآن مشاركة المنصة مع أصدقائك.</p>
+                </div>
+
+                <!-- قسم الإحصائيات -->
+                <div class="section">
+                    <h3>📊 إحصائيات النشاط</h3>
+                    <div class="stats">
+                        <div class="stat-box">
+                            <div class="number" id="activeUsers">1</div>
+                            <div class="label">مستخدمين نشطين</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="number" id="totalVisits">1</div>
+                            <div class="label">إجمالي الزيارات</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="number" id="sessionTime">جديد</div>
+                            <div class="label">وقت الجلسة</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- قسم المشاركة -->
+                <div class="section">
+                    <h3>🔗 شارك المنصة</h3>
+                    <div class="share-box">
+                        <p style="margin-bottom: 15px; color: #666;">انسخ الرابط أدناه وشاركه مع أصدقائك:</p>
+                        <div class="share-link-container">
+                            <input type="text" class="share-link-input" id="shareLink" readonly>
+                            <button class="copy-btn" onclick="copyToClipboard()">📋 نسخ</button>
+                        </div>
+
+                        <p style="margin-top: 20px; margin-bottom: 15px; color: #666; font-weight: 600;">شارك عبر:</p>
+                        <div class="social-share">
+                            <button class="social-btn whatsapp-btn" onclick="shareOnWhatsApp()">
+                                💬 WhatsApp
+                            </button>
+                            <button class="social-btn twitter-btn" onclick="shareOnTwitter()">
+                                𝕏 Twitter
+                            </button>
+                            <button class="social-btn facebook-btn" onclick="shareOnFacebook()">
+                                f Facebook
+                            </button>
+                            <button class="social-btn email-btn" onclick="shareViaEmail()">
+                                ✉️ البريد الإلكتروني
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- قسم المستخدمين النشطين -->
+                <div class="section">
+                    <h3>👥 المستخدمين النشطين</h3>
+                    <div class="users-list" id="usersList">
+                        <div class="user-card">
+                            <div class="status"></div>
+                            <p>أنت متصل الآن</p>
+                            <small style="color: #999;">آخر تحديث للتو</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- زر الخروج -->
+                <button class="logout-btn" onclick="logoutApp()">تسجيل الخروج</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -23,17 +399,113 @@
             messagingSenderId: "294517094693",
             appId: "1:294517094693:web:6215111f6fc5c5ca8e82cc"
         };
+        
         firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        let sessionStartTime = null;
+        let currentUserId = null;
 
         window.initApp = function() {
-            firebase.auth().signInAnonymously().then(() => {
-                document.getElementById('loginBtn').style.display = 'none';
-                document.getElementById('content').style.display = 'block';
-                alert("تم الدخول بنجاح!");
+            firebase.auth().signInAnonymously().then((result) => {
+                currentUserId = result.user.uid;
+                sessionStartTime = new Date();
+                
+                // عرض قسم التطبيق
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('appContent').style.display = 'block';
+                
+                // تعيين رابط المشاركة
+                document.getElementById('shareLink').value = window.location.href;
+                
+                // تسجيل النشاط في Firestore
+                recordUserActivity();
+                
+                // تحديث الإحصائيات
+                updateStats();
+                
+                // تحديث الإحصائيات كل 10 ثواني
+                setInterval(updateStats, 10000);
             }).catch((error) => {
-                alert("خطأ: " + error.message);
+                alert("خطأ في الدخول: " + error.message);
             });
         };
+
+        function recordUserActivity() {
+            db.collection('activities').add({
+                userId: currentUserId,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                action: 'user_login',
+                ip: 'web'
+            }).catch(err => console.log('خطأ في تسجيل النشاط:', err));
+        }
+
+        function updateStats() {
+            // حساب وقت الجلسة
+            if (sessionStartTime) {
+                const elapsed = Math.floor((new Date() - sessionStartTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                document.getElementById('sessionTime').textContent = 
+                    minutes > 0 ? `${minutes}د ${seconds}ث` : `${seconds}ث`;
+            }
+
+            // الحصول على عدد المستخدمين النشطين
+            db.collection('activities')
+                .where('timestamp', '>', new Date(Date.now() - 5 * 60 * 1000))
+                .get()
+                .then(snapshot => {
+                    const uniqueUsers = new Set(snapshot.docs.map(doc => doc.data().userId));
+                    document.getElementById('activeUsers').textContent = uniqueUsers.size;
+                    document.getElementById('totalVisits').textContent = snapshot.docs.length;
+                })
+                .catch(err => console.log('خطأ في جلب الإحصائيات:', err));
+        }
+
+        function copyToClipboard() {
+            const link = document.getElementById('shareLink');
+            link.select();
+            document.execCommand('copy');
+            
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = '✅ تم النسخ!';
+            setTimeout(() => {
+                btn.textContent = originalText;
+            }, 2000);
+        }
+
+        function shareOnWhatsApp() {
+            const text = "أنضم إلى منصة مايا لايف! منصة تواصل وتشارك حديثة: " + window.location.href;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+        }
+
+        function shareOnTwitter() {
+            const text = "اكتشف منصة مايا لايف - منصة التواصل والمشاركة الجديدة! #MayaLive";
+            const url = window.location.href;
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`);
+        }
+
+        function shareOnFacebook() {
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`);
+        }
+
+        function shareViaEmail() {
+            const subject = "منصة مايا لايف - Maya Live Platform";
+            const body = "أنضم إلى منصة مايا لايف!\n\n" + window.location.href;
+            window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        }
+
+        function logoutApp() {
+            firebase.auth().signOut().then(() => {
+                document.getElementById('appContent').style.display = 'none';
+                document.getElementById('loginSection').style.display = 'block';
+                currentUserId = null;
+                sessionStartTime = null;
+            }).catch((error) => {
+                alert("خطأ في تسجيل الخروج: " + error.message);
+            });
+        }
     </script>
 </body>
 </html>
