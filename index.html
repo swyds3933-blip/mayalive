@@ -2,16 +2,16 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Maya Live Admin</title>
+    <title>Maya Live</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 </head>
-<body style="background: #111; color: white; text-align: center; font-family: sans-serif;">
-    <h1>Maya Live - لوحة تحكم المؤسس</h1>
-    <div id="admin-interface">
-        <button onclick="initAdmin()" style="padding: 15px; font-size: 20px;">تفعيل لوحة التحكم</button>
-        <div id="admin-data" style="margin-top: 20px;"></div>
+<body style="background:#000; color:#fff; text-align:center;">
+    <h1>منصة مايا لايف</h1>
+    <button id="loginBtn" onclick="initApp()">دخول المنصة</button>
+    <div id="content" style="display:none;">
+        <p>أهلاً بك في المنصة</p>
     </div>
 
     <script>
@@ -24,11 +24,12 @@
             appId: "1:294517094693:web:6215111f6fc5c5ca8e82cc"
         };
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
 
-        window.initAdmin = () => {
+        window.initApp = function() {
             firebase.auth().signInAnonymously().then(() => {
-                document.getElementById('admin-data').innerHTML = "<h3>مرحباً بالمؤسس!</h3><p>النظام متصل.</p>";
+                document.getElementById('loginBtn').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+                alert("تم الدخول بنجاح!");
             });
         };
     </script>
