@@ -7,7 +7,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 </head>
-<body style="background:#000; color:#fff; text-align:center;">
+<body>
     <h1>منصة مايا لايف</h1>
     <button id="loginBtn" onclick="initApp()">دخول المنصة</button>
     <div id="content" style="display:none;">
@@ -30,6 +30,8 @@
                 document.getElementById('loginBtn').style.display = 'none';
                 document.getElementById('content').style.display = 'block';
                 alert("تم الدخول بنجاح!");
+            }).catch((error) => {
+                alert("خطأ: " + error.message);
             });
         };
     </script>
