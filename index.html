@@ -2,19 +2,18 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Maya Live Control</title>
+    <title>Maya Live Admin</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 </head>
-<body>
-    <div id="main-app" style="text-align: center; padding: 20px;">
-        <h1>Maya Live - النظام المتكامل</h1>
-        <button id="loginBtn" onclick="initLogin()">دخول المنصة</button>
-        <div id="user-info" style="display:none;">
-            <p>أهلاً بك يا مؤسس</p>
-        </div>
+<body style="background: #111; color: white; text-align: center; font-family: sans-serif;">
+    <h1>Maya Live - لوحة تحكم المؤسس</h1>
+    <div id="admin-interface">
+        <button onclick="initAdmin()" style="padding: 15px; font-size: 20px;">تفعيل لوحة التحكم</button>
+        <div id="admin-data" style="margin-top: 20px;"></div>
     </div>
+
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyArWDVZm-6sSJQxeX8lbMIvwVefpZ_zAnE",
@@ -25,11 +24,11 @@
             appId: "1:294517094693:web:6215111f6fc5c5ca8e82cc"
         };
         firebase.initializeApp(firebaseConfig);
-        window.initLogin = function() {
+        const db = firebase.firestore();
+
+        window.initAdmin = () => {
             firebase.auth().signInAnonymously().then(() => {
-                alert("تم الدخول بنجاح!");
-            }).catch((err) => {
-                alert("خطأ: " + err.message);
+                document.getElementById('admin-data').innerHTML = "<h3>مرحباً بالمؤسس!</h3><p>النظام متصل.</p>";
             });
         };
     </script>
